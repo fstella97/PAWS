@@ -2,10 +2,10 @@
 
 This repository contains all the code used in the development of “PAWS: A Synergy-Based Robotic Quadruped Leveraging Passivity for Robustness and Behavioural Diversity”. 
 It includes: 
-•	a Motion Capture dataset of real-world dog motion,
-•	the algorithm to generate an optimized design of the robotic quadruped, 
-•	the inverse kinematic algorithm used to generate motor actions in the reduced synergy space,
-•	The analysis of the stiffness of the PAWS robot end effectors. 
+*	a Motion Capture dataset of real-world dog motion,
+*	the algorithm to generate an optimized design of the robotic quadruped, 
+*	the inverse kinematic algorithm used to generate motor actions in the reduced synergy space,
+*	The analysis of the stiffness of the PAWS robot end effectors. 
 
 The software has been developed and tested in MATLAB R2022a and in python 3.0 
 
