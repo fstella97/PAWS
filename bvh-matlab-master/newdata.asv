@@ -1,0 +1,296 @@
+clear all 
+close all 
+clc
+
+namelist = {'D1_001_KAN01_001.bvh', 'D1_003_KAN01_001.bvh', 'D1_004_KAN01_001.bvh', 'D1_005_KAN01_001.bvh', 'D1_006_KAN01_001.bvh', 'D1_006_KAN01_002.bvh', 'D1_007_KAN01_001.bvh', 'D1_008_KAN01_001.bvh', 'D1_008_KAN01_002.bvh', 'D1_009_KAN01_001.bvh', 'D1_009_KAN01_002.bvh', 'D1_010_KAN01_001.bvh', 'D1_010_KAN01_002.bvh', 'D1_010_KAN01_003.bvh', 'D1_010_KAN01_004.bvh', 'D1_013_KAN01_001.bvh', 'D1_025_KAN01_001.bvh', 'D1_031_KAN01_001.bvh', 'D1_045_KAN01_001.bvh', 'D1_047_KAN01_001.bvh', 'D1_047z_KAN01_002.bvh', 'D1_047z_KAN01_003.bvh', 'D1_047z_KAN01_004.bvh', 'D1_047z_KAN01_005.bvh', 'D1_049_KAN01_001.bvh', 'D1_053_KAN01_001.bvh', 'D1_053_KAN01_002.bvh', 'D1_055_KAN01_001.bvh', 'D1_057_KAN01_001.bvh', 'D1_058_KAN01_001.bvh', 'D1_059_KAN01_001.bvh', 'D1_061_KAN01_001.bvh', 'D1_061z_KAN01_002.bvh', 'D1_061z_KAN01_003.bvh', 'D1_071_KAN02_002.bvh', 'D1_073_KAN02_002.bvh', 'D1_086_KAN02_001.bvh', 'D1_ex01_KAN01_001.bvh', 'D1_ex02_KAN02_001.bvh', 'D1_ex03_KAN02_001.bvh', 'D1_ex03_KAN02_003.bvh', 'D1_ex03_KAN02_006.bvh', 'D1_ex03_KAN02_012.bvh', 'D1_ex03_KAN02_013.bvh', 'D1_ex03_KAN02_014.bvh', 'D1_ex04_KAN02_001.bvh', 'D1_ex04_KAN02_002.bvh', 'D1_ex04_KAN02_003.bvh', 'D1_ex04_KAN02_004.bvh', 'D1_ex05_KAN02_001.bvh', 'D1_ex06_KAN02_001.bvh'};
+Q=[];
+for n = 1:numel(namelist)   
+    
+    d = mcread(char(namelist(n)));
+%      skeleton=loadbvh(namelist(n));
+    j2spar = mcinitj2spar;
+    
+    j2spar.rootMarker=1;
+    j2spar.frontalPlane=[17 18 19];
+   j2spar.parent=[0;1;2;3;4;5;3;7;8;9;10;3;12;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';
+%     j2spar.parent=[0;1;2;3;4;5;3;17;8;9;10;3;21;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';%best:backlegparnt
+%   j2spar.parent=[0;1;2;3;4;5;3;17;8;9;10;3;21;13;14;15;8;17;18;19;13;21;22;23;1;25;26]';%mutualparnt
+%   j2spar.parent=[0;1;2;3;4;5;3;1;8;9;10;3;1;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';%1isparent
+
+
+    j2spar.segmentName={'a','b','c','d','e','f','g','leftarm','leftforearm','lefthand','h','i','rightarm','rightforearm','righthand','j','leftupleg','leftleg','leftfoot','k','rightupleg','rightleg','rightfoot','l','m','n'};
+    
+    d2 = mcj2s(d, j2spar);
+    
+%     mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+    
+    q1=d2.segm(20).angle;
+    q2=d2.segm(19).angle;
+    q3=d2.segm(18).angle;
+    q4=d2.segm(8).angle;
+    q5=d2.segm(10).angle;
+    q6=d2.segm(11).angle;
+    q = [q1,q2,q3,q4,q5,q6];
+    Q = [Q;q];
+end 
+colMeans = nanmean(Q);
+Qu=Q;
+Qu(isnan(Qu)) = colMeans(3);
+[coeff1,score1,latent,tsquared,explained]=pca(Qu);
+
+% 
+% namelist = {'D1_001_KAN01_001.bvh', 'D1_003_KAN01_001.bvh', 'D1_004_KAN01_001.bvh', 'D1_005_KAN01_001.bvh', 'D1_006_KAN01_001.bvh', 'D1_006_KAN01_002.bvh', 'D1_007_KAN01_001.bvh', 'D1_008_KAN01_001.bvh', 'D1_008_KAN01_002.bvh', 'D1_009_KAN01_001.bvh', 'D1_009_KAN01_002.bvh', 'D1_010_KAN01_001.bvh', 'D1_010_KAN01_002.bvh', 'D1_010_KAN01_003.bvh', 'D1_010_KAN01_004.bvh', 'D1_013_KAN01_001.bvh', 'D1_025_KAN01_001.bvh', 'D1_031_KAN01_001.bvh', 'D1_045_KAN01_001.bvh', 'D1_047_KAN01_001.bvh', 'D1_047z_KAN01_002.bvh', 'D1_047z_KAN01_003.bvh', 'D1_047z_KAN01_004.bvh', 'D1_047z_KAN01_005.bvh', 'D1_049_KAN01_001.bvh', 'D1_053_KAN01_001.bvh', 'D1_053_KAN01_002.bvh', 'D1_055_KAN01_001.bvh', 'D1_057_KAN01_001.bvh', 'D1_058_KAN01_001.bvh', 'D1_059_KAN01_001.bvh', 'D1_061_KAN01_001.bvh', 'D1_061z_KAN01_002.bvh', 'D1_061z_KAN01_003.bvh', 'D1_071_KAN02_002.bvh', 'D1_073_KAN02_002.bvh', 'D1_086_KAN02_001.bvh', 'D1_ex01_KAN01_001.bvh', 'D1_ex02_KAN02_001.bvh', 'D1_ex03_KAN02_001.bvh', 'D1_ex03_KAN02_003.bvh', 'D1_ex03_KAN02_006.bvh', 'D1_ex03_KAN02_012.bvh', 'D1_ex03_KAN02_013.bvh', 'D1_ex03_KAN02_014.bvh', 'D1_ex04_KAN02_001.bvh', 'D1_ex04_KAN02_002.bvh', 'D1_ex04_KAN02_003.bvh', 'D1_ex04_KAN02_004.bvh', 'D1_ex05_KAN02_001.bvh', 'D1_ex06_KAN02_001.bvh'};
+% Q=[];
+% for n = 1:numel(namelist)   
+%     
+%     d = mcread(char(namelist(n)));
+% %      skeleton=loadbvh(namelist(n));
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[17 18 19];
+% %   j2spar.parent=[0;1;2;3;4;5;3;7;8;9;10;3;12;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';
+%     j2spar.parent=[0;1;2;3;4;5;3;17;8;9;10;3;21;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';%best:backlegparnt
+% %     j2spar.parent=[0;1;2;3;4;5;3;17;8;9;10;3;21;13;14;15;8;17;18;19;13;21;22;23;1;25;26]';%mutualparnt
+% %     j2spar.parent=[0;1;2;3;4;5;3;1;8;9;10;3;1;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';%1isparent
+% 
+%     j2spar.segmentName={'a','b','c','d','e','f','g','leftarm','leftforearm','lefthand','h','i','rightarm','rightforearm','righthand','j','leftupleg','leftleg','leftfoot','k','rightupleg','rightleg','rightfoot','l','m','n'};
+%     
+%     d2 = mcj2s(d, j2spar);
+%     
+% %     mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+%     
+%     q1=d2.segm(20).angle;
+%     q2=d2.segm(19).angle;
+%     q3=d2.segm(18).angle;
+%     q4=d2.segm(9).angle;
+%     q5=d2.segm(10).angle;
+%     q6=d2.segm(11).angle;
+%     q = [q1,q2,q3,q4,q5,q6];
+%     
+%     qu1=d2.segm(24).angle;
+%     qu2=d2.segm(23).angle;
+%     qu3=d2.segm(22).angle;
+%     qu4=d2.segm(14).angle;
+%     qu5=d2.segm(15).angle;
+%     qu6=d2.segm(16).angle;
+%     qu = [qu1,qu2,qu3,qu4,qu5,qu6];
+%     Q = [Q;q;qu];
+% end 
+% colMeans = nanmean(Q);
+% Qu=Q;
+% Qu(isnan(Qu)) = colMeans(3);
+% [coeff1,score1,latent,tsquared,explained]=pca(Qu);
+% 
+
+% 
+% 
+% namelist = {'D1_001_KAN01_001.bvh', 'D1_003_KAN01_001.bvh', 'D1_004_KAN01_001.bvh', 'D1_005_KAN01_001.bvh', 'D1_006_KAN01_001.bvh', 'D1_006_KAN01_002.bvh', 'D1_007_KAN01_001.bvh', 'D1_008_KAN01_001.bvh', 'D1_008_KAN01_002.bvh', 'D1_009_KAN01_001.bvh', 'D1_009_KAN01_002.bvh', 'D1_010_KAN01_001.bvh', 'D1_010_KAN01_002.bvh', 'D1_010_KAN01_003.bvh', 'D1_010_KAN01_004.bvh', 'D1_013_KAN01_001.bvh', 'D1_025_KAN01_001.bvh', 'D1_031_KAN01_001.bvh', 'D1_045_KAN01_001.bvh', 'D1_047_KAN01_001.bvh', 'D1_047z_KAN01_002.bvh', 'D1_047z_KAN01_003.bvh', 'D1_047z_KAN01_004.bvh', 'D1_047z_KAN01_005.bvh', 'D1_049_KAN01_001.bvh', 'D1_053_KAN01_001.bvh', 'D1_053_KAN01_002.bvh', 'D1_055_KAN01_001.bvh', 'D1_057_KAN01_001.bvh', 'D1_058_KAN01_001.bvh', 'D1_059_KAN01_001.bvh', 'D1_061_KAN01_001.bvh', 'D1_061z_KAN01_002.bvh', 'D1_061z_KAN01_003.bvh', 'D1_071_KAN02_002.bvh', 'D1_073_KAN02_002.bvh', 'D1_086_KAN02_001.bvh', 'D1_ex01_KAN01_001.bvh', 'D1_ex02_KAN02_001.bvh', 'D1_ex03_KAN02_001.bvh', 'D1_ex03_KAN02_003.bvh', 'D1_ex03_KAN02_006.bvh', 'D1_ex03_KAN02_012.bvh', 'D1_ex03_KAN02_013.bvh', 'D1_ex03_KAN02_014.bvh', 'D1_ex04_KAN02_001.bvh', 'D1_ex04_KAN02_002.bvh', 'D1_ex04_KAN02_003.bvh', 'D1_ex04_KAN02_004.bvh', 'D1_ex05_KAN02_001.bvh', 'D1_ex06_KAN02_001.bvh'};
+% Q=[];
+% for n = 1:numel(namelist)   
+%     
+%     de = mcread(char(namelist(n)));
+%     d = mcgetmarker(de, [20 19 18 17 8 9 10 11]);
+%     du = mcgetmarker(de, [24 23 22 21 13 14 15 16]);
+% 
+% %      skeleton=loadbvh(namelist(n));
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[1 2 3];
+%     j2spar.parent=[0;1;2;3;4;5;6;7]';
+% 
+%      j2spar.segmentName={'a','b','c','d','e','f','g'};
+%     
+%     d2 = mcj2s(d, j2spar);
+%     d2u = mcj2s(du, j2spar);
+% 
+%     
+% %     mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+%     
+%     q1=d2.segm(3).angle;
+%     q2=d2.segm(4).angle;
+%     q3=d2.segm(5).angle;
+%     q4=d2.segm(6).angle;
+%     q5=d2.segm(7).angle;
+%     q6=d2.segm(8).angle;
+%     q = [q1,q2,q3,q4,q5,q6];
+% 
+%     qu1=d2u.segm(3).angle;
+%     qu2=d2u.segm(4).angle;
+%     qu3=d2u.segm(5).angle;
+%     qu4=d2u.segm(6).angle;
+%     qu5=d2u.segm(7).angle;
+%     qu6=d2u.segm(8).angle;
+%     qu = [qu1,qu2,qu3,qu4,qu5,qu6];
+%     Q = [Q;q;qu];
+% end 
+% colMeans = nanmean(Q);
+% Qu=Q;
+% Qu(isnan(Qu)) = colMeans(3);
+% [coeff1,score1,latent,tsquared,explained]=pca(Qu);
+
+
+
+% 
+% namelist = {'__Attack.bvh', '__Bark_Jump.bvh', '__Floor_Rise_Left.bvh', '__Floor_Rise_Right.bvh', '__Galloping.bvh', '__Grab.bvh', '__Investigate_Loop.bvh', '__Paddle.bvh', '__Run_Frisbee.bvh', '__Running.bvh', '__Scratch_Right.bvh', '__Sit.bvh', '__Swim_Fast.bvh', '__Swim_Right.bvh', '__Turn_Left.bvh', '__Turn_Right.bvh', '__Walk.bvh', '__Walk_Backwards_Loop.bvh', '__Walk_Loop.bvh', '__swim.bvh', '__swim_left.bvh'};
+% Q=[];
+% for n = 1:numel(namelist)   
+%     
+%     d = mcread(char(namelist(n)));
+% %     skeleton=loadbvh(namelist(n));
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[10 11 12];
+%     j2spar.parent=[0;1;2;3;4;5;6;7;8;3;10;11;12;13;14;15;3;17;18;19;20;21;22;3;24;25;26;27;28;29;30;31;32;33;34;28;36;37;38;39;40;41;28;43;44;45;46;47;45;49;45;51;45;53;54;55;56;57;58;53;60;45;62;63;45;65;66]';
+%     j2spar.segmentName={'Hips';'Bip01_Spine0';'Bip01_Pelvis';'Bip01_Spine0_Tail';'Bip01_Spine0_Tail1';'Bip01_Spine0_Tail2';'Bip01_Spine0_Tail3';'Bip01_Spine0_Tail4';' ';'Bip01_R_Thigh';'Bip01_R_Calf';'Bip01_R_Foot';'Bip01_R_Toe0';'Bip01_R_Toe01';'Bip01_R_Toe02';' ';'Bip01_L_Thigh';'Bip01_L_Calf';'Bip01_L_Foot';'Bip01_L_Toe0';'Bip01_L_Toe01';'Bip01_L_Toe02';' ';'Bip01_Spine';'Bip01_Spine1';'Bip01_Spine2';'Bip01_Spine3';'Bip01_Neck';'Bip01_R_Clavicle';'Bip01_R_UpperArm';'Bip01_R_Forearm';'Bip01_R_Hand';'Bip01_R_Finger0';'Bip01_R_Finger01';' ';'Bip01_L_Clavicle';'Bip01_L_UpperArm';'Bip01_L_Forearm';'Bip01_L_Hand';'Bip01_L_Finger0';'Bip01_L_Finger01';' ';'Bip01_Neck1';'Bip01_Neck2';'Bip01_Head';'EyesBlue';'EyesBlue_2';' ';'Bip01_Head2_Eyeleds';' ';'Bip01_Head_Muzzle';' ';'Bip01_Head1_Jaw';'_Bip01_Head11_TungeControler';'_Bip01_Ponytail3_tunge';'Bip01_Ponytail31';'Bip01_Ponytail32';'Bip01_Ponytail3Nub';' ';'Bip01_Head_JawNub';' ';'Bip01_Ponytail2';'Bip01_Ponytail21';' ';'Bip01_Ponytail1';'Bip01_Ponytail11'}';
+%     d2 = mcj2s(d, j2spar);
+%     
+%      mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+%     
+%     q1=d2.segm(20).angle;
+%     q2=d2.segm(19).angle;
+%     q3=d2.segm(18).angle;
+%     q4=d2.segm(37).angle;
+%     q5=d2.segm(38).angle;
+%     q6=d2.segm(39).angle;
+%     q = [q1,q2,q3,q4,q5,q6];
+%     Q = [Q;q];
+% end 
+% colMeans = nanmean(Q);
+% Qu=Q;
+% Qu(isnan(Qu)) = colMeans(3);
+% [coeff1,score1,latent,tsquared,explained]=pca(Qu);
+
+
+% 
+% namelist = {'__Attack.bvh', '__Bark_Jump.bvh', '__Floor_Rise_Left.bvh', '__Floor_Rise_Right.bvh', '__Galloping.bvh', '__Grab.bvh', '__Investigate_Loop.bvh', '__Paddle.bvh', '__Run_Frisbee.bvh', '__Running.bvh', '__Scratch_Right.bvh', '__Sit.bvh', '__Swim_Fast.bvh', '__Swim_Right.bvh', '__Turn_Left.bvh', '__Turn_Right.bvh', '__Walk.bvh', '__Walk_Backwards_Loop.bvh', '__Walk_Loop.bvh', '__swim.bvh', '__swim_left.bvh'};
+% Q=[];
+% for n = 1:numel(namelist)   
+%     
+%     d = mcread(char(namelist(n)));
+% %     skeleton=loadbvh(namelist(n));
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[10 11 12];
+%     j2spar.parent=[0;1;2;3;4;5;6;7;8;3;10;11;12;13;14;15;3;17;18;19;20;21;22;3;24;25;26;27;28;29;30;31;32;33;34;28;36;37;38;39;40;41;28;43;44;45;46;47;45;49;45;51;45;53;54;55;56;57;58;53;60;45;62;63;45;65;66]';
+%     j2spar.segmentName={'Hips';'Bip01_Spine0';'Bip01_Pelvis';'Bip01_Spine0_Tail';'Bip01_Spine0_Tail1';'Bip01_Spine0_Tail2';'Bip01_Spine0_Tail3';'Bip01_Spine0_Tail4';' ';'Bip01_R_Thigh';'Bip01_R_Calf';'Bip01_R_Foot';'Bip01_R_Toe0';'Bip01_R_Toe01';'Bip01_R_Toe02';' ';'Bip01_L_Thigh';'Bip01_L_Calf';'Bip01_L_Foot';'Bip01_L_Toe0';'Bip01_L_Toe01';'Bip01_L_Toe02';' ';'Bip01_Spine';'Bip01_Spine1';'Bip01_Spine2';'Bip01_Spine3';'Bip01_Neck';'Bip01_R_Clavicle';'Bip01_R_UpperArm';'Bip01_R_Forearm';'Bip01_R_Hand';'Bip01_R_Finger0';'Bip01_R_Finger01';' ';'Bip01_L_Clavicle';'Bip01_L_UpperArm';'Bip01_L_Forearm';'Bip01_L_Hand';'Bip01_L_Finger0';'Bip01_L_Finger01';' ';'Bip01_Neck1';'Bip01_Neck2';'Bip01_Head';'EyesBlue';'EyesBlue_2';' ';'Bip01_Head2_Eyeleds';' ';'Bip01_Head_Muzzle';' ';'Bip01_Head1_Jaw';'_Bip01_Head11_TungeControler';'_Bip01_Ponytail3_tunge';'Bip01_Ponytail31';'Bip01_Ponytail32';'Bip01_Ponytail3Nub';' ';'Bip01_Head_JawNub';' ';'Bip01_Ponytail2';'Bip01_Ponytail21';' ';'Bip01_Ponytail1';'Bip01_Ponytail11'}';
+%     d2 = mcj2s(d, j2spar);
+%     %     
+% a1 = mcsegmangle(d, 12, 13);
+% a2 = mcsegmangle(d, 11, 12);
+% a3 = mcsegmangle(d, 10, 11);
+% a4 = mcsegmangle(d, 29, 30);
+% a5 = mcsegmangle(d, 30, 31);
+% a6 = mcsegmangle(d, 31, 32);
+% q1=a1.data(:,3);
+% q2=a2.data(:,3);
+% q3=a3.data(:,3);
+% q4=a4.data(:,3);
+% q5=a5.data(:,3);
+% q6=a6.data(:,3);
+% 
+%     q = [q1,q2,q3,q4,q5,q6];
+%     Q = [Q;q];
+% end 
+% 
+% [coeff1,score1,latent,tsquared,explained]=pca(Q);
+% 
+% 
+% namelist = {'D1_001_KAN01_001.bvh', 'D1_003_KAN01_001.bvh', 'D1_004_KAN01_001.bvh', 'D1_005_KAN01_001.bvh', 'D1_006_KAN01_001.bvh', 'D1_006_KAN01_002.bvh', 'D1_007_KAN01_001.bvh', 'D1_008_KAN01_001.bvh', 'D1_008_KAN01_002.bvh', 'D1_009_KAN01_001.bvh', 'D1_009_KAN01_002.bvh', 'D1_010_KAN01_001.bvh', 'D1_010_KAN01_002.bvh', 'D1_010_KAN01_003.bvh', 'D1_010_KAN01_004.bvh', 'D1_013_KAN01_001.bvh', 'D1_025_KAN01_001.bvh', 'D1_031_KAN01_001.bvh', 'D1_045_KAN01_001.bvh', 'D1_047_KAN01_001.bvh', 'D1_047z_KAN01_002.bvh', 'D1_047z_KAN01_003.bvh', 'D1_047z_KAN01_004.bvh', 'D1_047z_KAN01_005.bvh', 'D1_049_KAN01_001.bvh', 'D1_053_KAN01_001.bvh', 'D1_053_KAN01_002.bvh', 'D1_055_KAN01_001.bvh', 'D1_057_KAN01_001.bvh', 'D1_058_KAN01_001.bvh', 'D1_059_KAN01_001.bvh', 'D1_061_KAN01_001.bvh', 'D1_061z_KAN01_002.bvh', 'D1_061z_KAN01_003.bvh', 'D1_071_KAN02_002.bvh', 'D1_073_KAN02_002.bvh', 'D1_086_KAN02_001.bvh', 'D1_ex01_KAN01_001.bvh', 'D1_ex02_KAN02_001.bvh', 'D1_ex03_KAN02_001.bvh', 'D1_ex03_KAN02_003.bvh', 'D1_ex03_KAN02_006.bvh', 'D1_ex03_KAN02_012.bvh', 'D1_ex03_KAN02_013.bvh', 'D1_ex03_KAN02_014.bvh', 'D1_ex04_KAN02_001.bvh', 'D1_ex04_KAN02_002.bvh', 'D1_ex04_KAN02_003.bvh', 'D1_ex04_KAN02_004.bvh', 'D1_ex05_KAN02_001.bvh', 'D1_ex06_KAN02_001.bvh'};
+% Q=[];
+% for n = 1:numel(namelist)   
+%     
+%     d = mcread(char(namelist(n)));
+% %     skeleton=loadbvh(namelist(n));
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[17 18 19];
+%     j2spar.parent=[0;1;2;3;4;5;3;7;8;9;10;3;12;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';
+%     j2spar.segmentName={'a','b','c','d','e','f','g','leftarm','leftforearm','lefthand','h','i','rightarm','rightforearm','righthand','j','leftupleg','leftleg','leftfoot','k','rightupleg','rightleg','rightfoot','l','m','n'};
+%     
+%     d2 = mcj2s(d, j2spar);
+%     
+% %     mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+%     
+% a1 = mcsegmangle(d, 10, 11);
+% a2 = mcsegmangle(d, 9, 10);
+% a3 = mcsegmangle(d, 8, 9);
+% a4 = mcsegmangle(d, 17, 18);
+% a5 = mcsegmangle(d, 18, 19);
+% a6 = mcsegmangle(d, 19, 20);
+% q1=a1.data(:,3);
+% q2=a2.data(:,3);
+% q3=a3.data(:,3);
+% q4=a4.data(:,3);
+% q5=a5.data(:,3);
+% q6=a6.data(:,3);
+% 
+%     q = [q1,q2,q3,q4,q5,q6];
+%     Q = [Q;q];
+% end 
+% 
+% [coeff1,score1,latent,tsquared,explained]=pca(Q);
+
+
+
+
+% 
+% clear all 
+% close all 
+% clc
+% 
+% name = 'D1_ex01_KAN01_001.bvh';
+%    
+%     d = mcread(name);
+%     skeleton=loadbvh(name);
+% 
+%     j2spar = mcinitj2spar;
+%     
+%     j2spar.rootMarker=1;
+%     j2spar.frontalPlane=[10 11 12];
+% %      j2spar.parent=[0;1;2;3;4;5;3;7;8;9;10;3;12;13;14;15;1;17;18;19;1;21;22;23;1;25;26]';
+%       j2spar.parent=[0;1;2;3;4;5;3;17;8;9;10;3;21;13;14;15;8;17;18;19;13;21;22;23;1;25;26]';
+% 
+%     j2spar.segmentName={'a','b','c','d','e','f','g','leftarm','leftforearm','lefthand','h','i','rightarm','rightforearm','righthand','j','leftupleg','leftleg','leftfoot','k','rightupleg','rightleg','rightfoot','l','m','n'};
+%     
+% %     d3 = mc2local(d, 10)
+%     d2 = mcj2s(d, j2spar);
+%     
+%      mcplottimeseries(d2, [9:11, 14:16, 18:20, 22:24], 'var', 'angle', 'timetype', 'frame');
+%     
+%     q1=d2.segm(11).angle;
+%     q2=d2.segm(10).angle;
+%     q3=d2.segm(9).angle;
+%     q4=d2.segm(18).angle;
+%     q5=d2.segm(19).angle;
+%     q6=d2.segm(20).angle;
+%     q = [q1,q2,q3,q4,q5,q6];
+%     
+% 
+%  
+% clear all 
+% close all 
+% clc
+% 
+% 
+% name = '__running.bvh';
+% d = mcread(name);
+% skeleton=loadbvh(name);
+% 
+% j2spar = mcinitj2spar;
+% 
+% j2spar.rootMarker=1;
+% j2spar.frontalPlane=[10 11 12];
+% j2spar.parent=[0;1;2;3;4;5;6;7;8;3;10;11;12;13;14;15;3;17;18;19;20;21;22;3;24;25;26;27;28;29;30;31;32;33;34;28;36;37;38;39;40;41;28;43;44;45;46;47;45;49;45;51;45;53;54;55;56;57;58;53;60;45;62;63;45;65;66]';
+% j2spar.segmentName={'Hips';'Bip01_Spine0';'Bip01_Pelvis';'Bip01_Spine0_Tail';'Bip01_Spine0_Tail1';'Bip01_Spine0_Tail2';'Bip01_Spine0_Tail3';'Bip01_Spine0_Tail4';' ';'Bip01_R_Thigh';'Bip01_R_Calf';'Bip01_R_Foot';'Bip01_R_Toe0';'Bip01_R_Toe01';'Bip01_R_Toe02';' ';'Bip01_L_Thigh';'Bip01_L_Calf';'Bip01_L_Foot';'Bip01_L_Toe0';'Bip01_L_Toe01';'Bip01_L_Toe02';' ';'Bip01_Spine';'Bip01_Spine1';'Bip01_Spine2';'Bip01_Spine3';'Bip01_Neck';'Bip01_R_Clavicle';'Bip01_R_UpperArm';'Bip01_R_Forearm';'Bip01_R_Hand';'Bip01_R_Finger0';'Bip01_R_Finger01';' ';'Bip01_L_Clavicle';'Bip01_L_UpperArm';'Bip01_L_Forearm';'Bip01_L_Hand';'Bip01_L_Finger0';'Bip01_L_Finger01';' ';'Bip01_Neck1';'Bip01_Neck2';'Bip01_Head';'EyesBlue';'EyesBlue_2';' ';'Bip01_Head2_Eyeleds';' ';'Bip01_Head_Muzzle';' ';'Bip01_Head1_Jaw';'_Bip01_Head11_TungeControler';'_Bip01_Ponytail3_tunge';'Bip01_Ponytail31';'Bip01_Ponytail32';'Bip01_Ponytail3Nub';' ';'Bip01_Head_JawNub';' ';'Bip01_Ponytail2';'Bip01_Ponytail21';' ';'Bip01_Ponytail1';'Bip01_Ponytail11'}';
+% d2 = mcj2s(d, j2spar);
+% 
+% 
+% % mcplottimeseries(d2, [11:13, 18:20, 30:32, 37:39], 'var', 'angle', 'timetype', 'frame');
+% mcplottimeseries(d2, [11:13,  30:32], 'var', 'angle', 'timetype', 'frame');
+% 
+% % 
