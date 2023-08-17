@@ -1,8 +1,6 @@
 # PAWS
 
 This repository contains all the code used in the development of “PAWS: A Synergy-Based Robotic Quadruped Leveraging Passivity for Robustness and Behavioural Diversity”. 
-![IMG_1075](https://github.com/fstella97/PAWS/assets/85675387/79899a22-3d6f-43d2-af97-6a76b959fdd4)
-
 It includes: 
 -	a Motion Capture dataset of real-world dog motion,
 -	the algorithm to generate an optimized design of the robotic quadruped, 
@@ -18,3 +16,4 @@ Given the synergy matrix, the optimal mechanism can be found by running the scri
 The inverse kinematic can be reproduced for a variety of motions, which can be selected in line 123,  by running the script “Dog_IK_mult\main”
 The stiffness analysis can be reproduced by running the “Stiffness\Stiffness_analysis” script.  
 Please note that the full pipeline could be applied to any dataset of biological movements. 
+![IMG_1075](https://github.com/fstella97/PAWS/assets/85675387/79899a22-3d6f-43d2-af97-6a76b959fdd4)
