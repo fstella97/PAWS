@@ -1,6 +1,8 @@
 # PAWS
 
 This repository contains all the code used in the development of “PAWS: A Synergy-Based Robotic Quadruped Leveraging Passivity for Robustness and Behavioural Diversity”. 
+![IMG_1075](https://github.com/fstella97/PAWS/assets/85675387/79899a22-3d6f-43d2-af97-6a76b959fdd4)
+
 It includes: 
 -	a Motion Capture dataset of real-world dog motion,
 -	the algorithm to generate an optimized design of the robotic quadruped, 
